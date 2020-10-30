@@ -1,33 +1,70 @@
-# Integration sample 
+## What is this ? 
+<br/>
+This is a .NET integration sample code for the <a href="https://bulksign.com">Bulksign platform</a> . It allows the integrator to :
+<br/>
+<br/>
 
-This is a .NET integration sample for the <a href="https://bulksign.com">Bulksign platform</a> . It allows the integrator to :
 
-- receive all the callbacks triggered from Bulksign
+- receive all the callbacks triggered from Bulksign platform
+
+- handle bundle status updates with periodic configurable polling  (in case your callback handler website goes down)
 
 - maintain, in a local SQL Server database, a list of all bundles send for signing
 
-- download the completed documents and stored them locally
+- optionally store the configuration of each sent bundle (could be used for troubleshooting)
 
+- downloads the completed documents and stores them locally
 
-# How to use  this  ?
+- works with any version of Bulksign (SAAS and OnPremise)
 
-- clone this repository
+- it's shipped as source code so any integrator can change it and adapt it to its needs.
+
+<br/>
+<br/>
+
+## How to deploy and use ?
+<br/>
+
+- clone this repository and build the solution
 
 - create a empty SQL Server database  
 
-- run the \content\db-query.sql  query to create the DB schema.
+- run the \dbschema\db-query.sql  query to create the DB schema.
 
-- extend the code to handle the callbacks if needed (now the information is logged)
+- extend the code to handle callbacks \ bundle completed action.
 
-- build and deploy the integration code
+- configure the integration : 
 
-- update your integration code to point to this endpoint when sending bundles for signing
+```
 
-IF you are using the Bulksign SDK, this is done by specifying the endpoint in the BulksignApi ctor
+<add key="IntervalCompletedDocumentsInMinutes" value="3" />
+
+<add key="IntervalBundleStatusInMinutes" value="24" />
+		
+<add key="DatabaseConnectionString" value="" />
+		
+<add key="CompletedBundlePath" value="c:\CompleteDocuments\" />
+		
+<add key="BulksignRootApiUrl" value="http://bulksign.com/webapi/" /> 
+		
+<add key="StoreBundleConfiguration" value="True" />
+
+```
+
+
+- deploy the integration code : the CallbackReceiver website should be deployed in IIS , and the WindowService project 
+
+```
+cd c:\Windows\Microsoft.NET\Framework64\v4.0.30319\
+
+installutil -i c:\build\BulksignIntegration.Service.exe
+
+```
+
+- your integration code to point to this endpoint when sending bundles for signing
 
 ```
   BulksignApi api = new BulksignApi ("http://myendpoint/bulksignintegration/restapi")
 ```
 
-*assuming you have deployed this integration to "http://myendpoint/bulksignintegration"
 
