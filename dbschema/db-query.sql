@@ -1,11 +1,11 @@
-CREATE TABLE [dbo].[SentBundles] (
-	[BundleId] varchar(40) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL, 
+CREATE TABLE [dbo].[SentEnvelopes] (
+	[EnvelopeId] uniqueidentifier COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL, 
 	[SentDate] datetime NOT NULL, 
 	[Status] int NOT NULL, 
 	[SenderEmail] nvarchar(500) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL, 
 	[ApiKey] nvarchar(254) COLLATE SQL_Latin1_General_CP1_CI_AS, 
 	[CompletedFilePath] nvarchar(1000) COLLATE SQL_Latin1_General_CP1_CI_AS, 
-	[SentBundleConfiguration] ntext COLLATE SQL_Latin1_General_CP1_CI_AS
+	[SentEnvelopeConfiguration] ntext COLLATE SQL_Latin1_General_CP1_CI_AS
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [BundleId]
@@ -25,5 +25,3 @@ CREATE NONCLUSTERED INDEX [IX_SentBundles_Status]
 	,ALLOW_PAGE_LOCKS=ON) ON [PRIMARY]
 
 
-
-	SELECT * FROM Utilizator from SamAccount ASC

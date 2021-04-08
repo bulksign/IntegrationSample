@@ -8,12 +8,12 @@
 		public const string ENVELOPE_DELETED = "deleted";
 
 
-		public const int NUMERIC_BUNDLE_STATUS_IN_PROGRESS = 3;
+		public const int NUMERIC_ENVELOPE_STATUS_IN_PROGRESS = 3;
 		
-		public const int NUMERIC_BUNDLE_STATUS_COMPLETED = 4;
-		public const int NUMERIC_BUNDLE_STATUS_CANCELED = 5;
-		public const int NUMERIC_BUNDLE_STATUS_EXPIRED = 6;
-		public const int NUMERIC_BUNDLE_STATUS_DELETED = 10;
+		public const int NUMERIC_ENVELOPE_STATUS_COMPLETED = 4;
+		public const int NUMERIC_ENVELOPE_STATUS_CANCELED = 5;
+		public const int NUMERIC_ENVELOPE_STATUS_EXPIRED = 6;
+		public const int NUMERIC_ENVELOPE_STATUS_DELETED = 10;
 
 
 
@@ -21,5 +21,9 @@
 		public const string RECIPIENT_ACTION_SIGN_STEP_FINISHED = "signstepfinished";
 		public const string RECIPIENT_ACTION_SIGN_STEP_REJECTED = "signsteprejected";
 		public const string RECIPIENT_ACTION_NEXT_SIGNER = "nextsigner";
+
+		public const string RECIPIENT_ACTION_SIGN_STEP_DELEGATED = "signstepdelegated";
+		public const string RECIPIENT_ACTION_SIGN_STEP_AUTHENTICATED = "signstepauthenticated";
+
 	}
 }

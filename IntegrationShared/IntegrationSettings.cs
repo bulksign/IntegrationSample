@@ -11,7 +11,7 @@ namespace BulksignIntegration.Shared
 			set;
 		}
 
-		public static int IntervalBundleStatusInHours
+		public static int IntervalEnvelopeStatusInHours
 		{
 			get;
 			set;
@@ -23,13 +23,13 @@ namespace BulksignIntegration.Shared
 			set;
 		}
 
-		public static string CompletedBundlePath
+		public static string CompletedEnvelopePath
 		{
 			get;
 			set;
 		}
 
-		public static bool StoreBundleConfiguration
+		public static bool StoreEnvelopeConfiguration
 		{
 			get;
 			set;
@@ -49,10 +49,10 @@ namespace BulksignIntegration.Shared
 		public static void ReadSettings()
 		{
 			IntervalCompletedDocumentsInMinutes = Convert.ToInt32(ConfigurationManager.AppSettings["IntervalCompletedDocumentsInMinutes"]);
-			IntervalBundleStatusInHours = Convert.ToInt32(ConfigurationManager.AppSettings["IntervalBundleStatusInMinutes"]);
+			IntervalEnvelopeStatusInHours = Convert.ToInt32(ConfigurationManager.AppSettings["IntervalBundleStatusInMinutes"]);
 			DatabaseConnectionString = ConfigurationManager.AppSettings["DatabaseConnectionString"];
-			CompletedBundlePath = ConfigurationManager.AppSettings["CompletedBundlePath"];
-			StoreBundleConfiguration = Convert.ToBoolean(ConfigurationManager.AppSettings["StoreBundleConfiguration"]);
+			CompletedEnvelopePath = ConfigurationManager.AppSettings["CompletedBundlePath"];
+			StoreEnvelopeConfiguration = Convert.ToBoolean(ConfigurationManager.AppSettings["StoreEnvelopeConfiguration"]);
 			RootApiUrl = ConfigurationManager.AppSettings["BulksignRootApiUrl"];
 		}
 	}

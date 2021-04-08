@@ -9,11 +9,11 @@ namespace BulksignIntegration.Shared
 	{
 		private static Logger log = LogManager.GetCurrentClassLogger();
 
-		public SentBundleModel[] GetInProgressBundles()
+		public SentEnvelopeModel[] GetInProgressEnvelopes()
 		{
 			try
 			{
-				List<SentBundleModel> result = new List<SentBundleModel>();
+				List<SentEnvelopeModel> result = new List<SentEnvelopeModel>();
 
 				using (SqlConnection connection = new SqlConnection())
 				{
@@ -23,16 +23,16 @@ namespace BulksignIntegration.Shared
 					SqlCommand command = new SqlCommand();
 					command.Connection = connection;
 
-					command.CommandText = "SELECT BundleId, SenderEmail, ApiKey FROM SentBundles WHERE Status=" + Constants.NUMERIC_BUNDLE_STATUS_IN_PROGRESS;
+					command.CommandText = "SELECT EnvelopeId, SenderEmail, ApiKey FROM SentEnvelopes WHERE Status=" + Constants.NUMERIC_ENVELOPE_STATUS_IN_PROGRESS;
 
 					SqlDataReader reader = command.ExecuteReader();
 
 					while (reader.Read())
 					{
-						SentBundleModel sm = new SentBundleModel();
+						SentEnvelopeModel sm = new SentEnvelopeModel();
 						sm.Id = reader[0].ToString();
 						sm.SenderEmail = reader[1].ToString();
-						sm.ApiKey = reader[2].ToString();
+						sm.ApiToken = reader[2].ToString();
 
 						result.Add(sm);
 					}
@@ -42,16 +42,16 @@ namespace BulksignIntegration.Shared
 			}
 			catch (Exception ex)
 			{
-				log.Error(ex, $" {nameof(GetInProgressBundles)}");
-				return new SentBundleModel[0]; 
+				log.Error(ex, $" {nameof(GetInProgressEnvelopes)}");
+				return new SentEnvelopeModel[0]; 
 			}
 		}
 
-		public SentBundleModel[] GetBundlesToDownload()
+		public SentEnvelopeModel[] GetEnvelopesToDownload()
 		{
 			try
 			{
-				List<SentBundleModel> result = new List<SentBundleModel>();
+				List<SentEnvelopeModel> result = new List<SentEnvelopeModel>();
 
 				using (SqlConnection connection = new SqlConnection())
 				{
@@ -61,16 +61,16 @@ namespace BulksignIntegration.Shared
 					SqlCommand command = new SqlCommand();
 					command.Connection = connection;
 
-					command.CommandText = "SELECT BundleId, SenderEmail, ApiKey FROM SentBundles WHERE Status=" + Constants.NUMERIC_BUNDLE_STATUS_COMPLETED + " AND CompletedFilePath=" + DBNull.Value;
+					command.CommandText = "SELECT EnvelopeId, SenderEmail, ApiKey FROM SentEnvelopes WHERE Status=" + Constants.NUMERIC_ENVELOPE_STATUS_COMPLETED + " AND CompletedFilePath=" + DBNull.Value;
 
 					SqlDataReader reader = command.ExecuteReader();
 
 					while (reader.Read())
 					{
-						SentBundleModel sm = new SentBundleModel();
+						SentEnvelopeModel sm = new SentEnvelopeModel();
 						sm.Id = reader[0].ToString();
 						sm.SenderEmail = reader[1].ToString();
-						sm.ApiKey = reader[2].ToString();
+						sm.ApiToken = reader[2].ToString();
 
 						result.Add(sm);
 					}
@@ -80,12 +80,12 @@ namespace BulksignIntegration.Shared
 			}
 			catch (Exception ex)
 			{
-				log.Error(ex, $" {nameof(GetBundlesToDownload)}");
-				return new SentBundleModel[0];
+				log.Error(ex, $" {nameof(GetEnvelopesToDownload)}");
+				return new SentEnvelopeModel[0];
 			}
 		}
 
-		public void MarkAsDeleted(string bundleId)
+		public void MarkAsDeleted(string envelopeId)
 		{
 			try
 			{
@@ -96,22 +96,22 @@ namespace BulksignIntegration.Shared
 
 					SqlCommand command = new SqlCommand();
 
-					command.Parameters.AddWithValue("bundleId", bundleId);
-					command.Parameters.AddWithValue("status", Constants.NUMERIC_BUNDLE_STATUS_DELETED);
+					command.Parameters.AddWithValue("envelopeId", envelopeId);
+					command.Parameters.AddWithValue("status", Constants.NUMERIC_ENVELOPE_STATUS_DELETED);
 					command.Connection = connection;
 
-					command.CommandText = "UPDATE SentBundles SET Status=@status WHERE BundleId=@bundleId";
+					command.CommandText = "UPDATE SentEnvelopes SET Status=@status WHERE EnvelopeId=@envelopeId";
 
 					command.ExecuteNonQuery();
 				}
 			}
 			catch (Exception ex)
 			{
-				log.Error(ex, $"Failed to insert bundle {bundleId}");
+				log.Error(ex, $"Failed to insert envelope {envelopeId}");
 			}
 		}
 
-		public void AddSentBundle(string email, string token, string bundleId, string bundleConfiguration)
+		public void AddSentEnvelope(string email, string token, string envelopeId, string envelopeConfiguration)
 		{
 			try
 			{
@@ -122,34 +122,34 @@ namespace BulksignIntegration.Shared
 
 					SqlCommand command = new SqlCommand();
 
-					command.Parameters.AddWithValue("bundleId", bundleId);
-					command.Parameters.AddWithValue("status", Constants.NUMERIC_BUNDLE_STATUS_IN_PROGRESS);
+					command.Parameters.AddWithValue("envelopeId", envelopeId);
+					command.Parameters.AddWithValue("status", Constants.NUMERIC_ENVELOPE_STATUS_IN_PROGRESS);
 					command.Parameters.AddWithValue("sentDate", DateTime.UtcNow);
 					command.Parameters.AddWithValue("senderEmail", email);
 					command.Parameters.AddWithValue("apiKey", token);
 					command.Parameters.AddWithValue("processed", 0);
-					command.Parameters.AddWithValue("sentBundleConfiguration", bundleConfiguration);
+					command.Parameters.AddWithValue("sentEnvelopeConfiguration", envelopeConfiguration);
 
 
 					command.Connection = connection;
 
-					command.CommandText = "INSERT INTO SentBundles(BundleId,SentDate,Status,SenderEmail,ApiKey, IsProcessed,SentBundleConfiguration) VALUES (@bundleId, @sentDate, @status,@senderEmail,@apiKey, @processed, @sentBundleConfiguration)";
+					command.CommandText = "INSERT INTO SentEnvelopes(envelopeId,SentDate,Status,SenderEmail,ApiKey, IsProcessed,SentEnvelopeConfiguration) VALUES (@envelopeId, @sentDate, @status,@senderEmail,@apiKey, @processed, @sentEnvelopeConfiguration)";
 
 					command.ExecuteNonQuery();
 				}
 			}
 			catch (Exception ex)
 			{
-				log.Error(ex, $"Failed to insert bundle {bundleId}");
+				log.Error(ex, $"Failed to insert envelope '{envelopeId}'");
 			}
 		}
 
-		public void UpdateBundleStatus(string bundleId, string statusAsString)
+		public void UpdateEnvelopeStatus(string envelopeId, string statusAsString)
 		{
 
 			try
 			{
-				int newStatus = ConvertBundleStatus(statusAsString);
+				int newStatus = ConvertEnvelopeStatus(statusAsString);
 
 				using (SqlConnection connection = new SqlConnection())
 				{
@@ -159,44 +159,44 @@ namespace BulksignIntegration.Shared
 
 					SqlCommand command = new SqlCommand();
 
-					command.Parameters.AddWithValue("bundleId", bundleId);
+					command.Parameters.AddWithValue("envelopeId", envelopeId);
 					command.Connection = connection;
 
-					command.CommandText = "SELECT Status FROM SentBundles WHERE BundleId = @bundleId";
+					command.CommandText = "SELECT Status FROM SentEnvelopes WHERE EnvelopeId = @envelopeId";
 
 					object result = command.ExecuteScalar();
 
 
 					if (result == null || result == DBNull.Value)
 					{
-						log.Error($"Bundle '{bundleId}' was not found in database");
+						log.Error($"Envelope '{envelopeId}' was not found in database");
 						return;
 					}
 
 
-					if (result.ToString() != Constants.NUMERIC_BUNDLE_STATUS_IN_PROGRESS.ToString())
+					if (result.ToString() != Constants.NUMERIC_ENVELOPE_STATUS_IN_PROGRESS.ToString())
 					{
-						log.Error($"Bundle '{bundleId}' received invalid callback status. Current DB status is '{result}', received status is {newStatus} ");
+						log.Error($"Envelope '{envelopeId}' received invalid callback status. Current DB status is '{result}', received status is {newStatus} ");
 						return;
 					}
 
 					command.Parameters.Clear();
 
 					command.Parameters.AddWithValue("newStatus", newStatus);
-					command.Parameters.AddWithValue("bundleId", bundleId);
+					command.Parameters.AddWithValue("enveloped", envelopeId);
 
-					command.CommandText = "UPDATE SentBundles SET Status=@newStatus WHERE BundleId=@bundleId";
+					command.CommandText = "UPDATE SentEnvelopes SET Status=@newStatus WHERE EnvelopeId=@envelopeId";
 
 					command.ExecuteNonQuery();
 				}
 			}
 			catch (Exception ex)
 			{
-				log.Error(ex, $"Failed to update status for bundle {bundleId}");
+				log.Error(ex, $"Failed to update status for envelope '{envelopeId}' ");
 			}
 		}
 
-		public void UpdateBundleCompletedDocumentPath(string bundleId, string fullPath)
+		public void UpdateEnvelopeCompletedDocumentPath(string envelopeId, string fullPath)
 		{
 
 			try
@@ -209,38 +209,38 @@ namespace BulksignIntegration.Shared
 					SqlCommand command = new SqlCommand();
 					command.Connection = connection;
 
-					command.Parameters.AddWithValue("bundleId", bundleId);
+					command.Parameters.AddWithValue("envelopeId", envelopeId);
 					command.Parameters.AddWithValue("completedPath", fullPath);
 
-					command.CommandText = "UPDATE SentBundles SET CompletedFilePath=@completedPath WHERE BundleId=@bundleId";
+					command.CommandText = "UPDATE SentEnvelopes SET CompletedFilePath=@completedPath WHERE EnvelopeId=@envelopeId";
 
 					command.ExecuteNonQuery();
 				}
 			}
 			catch (Exception ex)
 			{
-				log.Error(ex, $"Failed {nameof(UpdateBundleCompletedDocumentPath)} for '{bundleId}' ");
+				log.Error(ex, $"Failed {nameof(UpdateEnvelopeCompletedDocumentPath)} for '{envelopeId}' ");
 			}
 		}
 
-		private int ConvertBundleStatus(string status)
+		private int ConvertEnvelopeStatus(string status)
 		{
 			switch (status)
 			{
 				case Constants.ENVELOPE_CANCELED:
-					return Constants.NUMERIC_BUNDLE_STATUS_CANCELED;
+					return Constants.NUMERIC_ENVELOPE_STATUS_CANCELED;
 
 				case Constants.ENVELOPE_EXPIRED:
-					return Constants.NUMERIC_BUNDLE_STATUS_EXPIRED;
+					return Constants.NUMERIC_ENVELOPE_STATUS_EXPIRED;
 
 				case Constants.ENVELOPE_COMPLETED:
-					return Constants.NUMERIC_BUNDLE_STATUS_COMPLETED;
+					return Constants.NUMERIC_ENVELOPE_STATUS_COMPLETED;
 
 				case Constants.ENVELOPE_DELETED:
-					return Constants.NUMERIC_BUNDLE_STATUS_DELETED;
+					return Constants.NUMERIC_ENVELOPE_STATUS_DELETED;
 
 				default:
-					throw  new ArgumentException($"Bundle Status '{status}' is invalid ");
+					throw  new ArgumentException($"Envelope status '{status}' is invalid ");
 			}
 		}
 	}
