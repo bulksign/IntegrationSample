@@ -70,7 +70,7 @@ namespace BulksignIntegration.CallbackReceiver
 			{
 				try
 				{
-					new DbIntegration().AddSentEnvelope(apiToken.UserEmail, apiToken.Token, result.Response.EnvelopeId, string.Empty);
+					new DbIntegration().AddSentEnvelope(apiToken.UserEmail, apiToken.Key, result.Response.EnvelopeId, string.Empty);
 				}
 				catch (Exception ex)
 				{
@@ -98,7 +98,7 @@ namespace BulksignIntegration.CallbackReceiver
 				{
 					string bundleConfiguration = IntegrationSettings.StoreEnvelopeConfiguration ? JsonConvert.SerializeObject(bundle) : string.Empty;
 
-					new DbIntegration().AddSentEnvelope(apiToken.UserEmail, apiToken.Token, result.Response.EnvelopeId, bundleConfiguration);
+					new DbIntegration().AddSentEnvelope(apiToken.UserEmail, apiToken.Key, result.Response.EnvelopeId, bundleConfiguration);
 				}
 				catch (Exception ex)
 				{
@@ -126,7 +126,7 @@ namespace BulksignIntegration.CallbackReceiver
 				{
 					string bundleConfiguration = IntegrationSettings.StoreEnvelopeConfiguration ? JsonConvert.SerializeObject(bundle) : string.Empty;
 
-					new DbIntegration().AddSentEnvelope(apiToken.UserEmail, apiToken.Token, result.Response.EnvelopeId, bundleConfiguration);
+					new DbIntegration().AddSentEnvelope(apiToken.UserEmail, apiToken.Key, result.Response.EnvelopeId, bundleConfiguration);
 				}
 				catch (Exception ex)
 				{
@@ -173,7 +173,7 @@ namespace BulksignIntegration.CallbackReceiver
 				return new AuthenticationApiModel
 				{
 					UserEmail = splits[0],
-					Token = splits[1]
+					Key = splits[1]
 				};
 			}
 			catch (Exception ex)
