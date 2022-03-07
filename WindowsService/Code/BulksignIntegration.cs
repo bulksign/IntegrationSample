@@ -22,16 +22,16 @@ namespace BulksignIntegration.WindowsService
 				AuthenticationApiModel token = new AuthenticationApiModel()
 				{
 					UserEmail = envelope.SenderEmail,
-					Token = envelope.ApiToken
+					Key = envelope.ApiToken
 				};
 
-				BulksignResult<EnvelopeStatusApi> envelopeStatus = api.GetEnvelopeStatus(token, envelope.Id);
+				BulksignResult<EnvelopeStatusTypeApi> envelopeStatus = api.GetEnvelopeStatus(token, envelope.Id);
 
 
 				if (envelopeStatus.IsSuccessful == false)
 				{
 					//it seems the envelope doesn't exist anymore, must have been deleted
-					if (envelopeStatus.ErrorCode == ApiErrorCode.API_ERROR_MESSAGE_ENVELOPE_WITH_ID_NOT_FOUND)
+					if (envelopeStatus.ErrorCode == ApiErrorCode.API_ERROR_CODE_ENVELOPE_WITH_ID_NOT_FOUND)
 					{
 						log.Error($"{nameof(DownloadCompletedDocuments)} , GetEnvelopeStatus returned {ApiErrorCode.API_ERROR_MESSAGE_ENVELOPE_WITH_ID_NOT_FOUND} , envelope doesn't exists");
 
@@ -71,15 +71,15 @@ namespace BulksignIntegration.WindowsService
 			AuthenticationApiModel token = new AuthenticationApiModel()
 			{
 				UserEmail = email,
-				Token = apiKey
+				Key = apiKey
 			};
 
-			BulksignResult<EnvelopeStatusApi> envelopeStatus = api.GetEnvelopeStatus(token, envelopeId);
+			BulksignResult<EnvelopeStatusTypeApi> envelopeStatus = api.GetEnvelopeStatus(token, envelopeId);
 
 			if (envelopeStatus.IsSuccessful == false)
 			{
 				//it seems the envelope doesn't exist
-				if (envelopeStatus.ErrorCode == ApiErrorCode.API_ERROR_MESSAGE_ENVELOPE_WITH_ID_NOT_FOUND)
+				if (envelopeStatus.ErrorCode == ApiErrorCode.API_ERROR_CODE_ENVELOPE_WITH_ID_NOT_FOUND)
 				{
 					log.Error($"{nameof(DownloadCompletedDocuments)} , for envelopeId '{envelopeId}', GetEnvelopeStatus returned '{ApiErrorCode.API_ERROR_MESSAGE_ENVELOPE_WITH_ID_NOT_FOUND}' , envelope doesn't exists anymore");
 					
@@ -93,7 +93,7 @@ namespace BulksignIntegration.WindowsService
 				return;
 			}
 
-			if (envelopeStatus.Response != EnvelopeStatusApi.Completed)
+			if (envelopeStatus.Response != EnvelopeStatusTypeApi.Completed)
 			{
 				log.Error($" Invalid envelope status received in {nameof(DownloadCompletedDocuments)} for envelopeId '{envelopeId}', status {envelopeStatus.ToString()} ");
 
