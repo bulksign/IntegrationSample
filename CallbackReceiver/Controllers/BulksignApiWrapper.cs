@@ -110,35 +110,6 @@ namespace BulksignIntegration.CallbackReceiver
 		}
 
 
-		[Route("SendBulkEnvelope")]
-		[System.Web.Mvc.HttpPost]
-		public BulksignResult<SendEnvelopeResultApiModel> SendBulkEnvelope([FromBody] EnvelopeApiModel bundle)
-		{
-			AuthenticationApiModel apiToken = ExtractApiAuthenticationToken();
-
-			BulkSignApi api = new BulkSignApi(IntegrationSettings.BulksignRestUrl);
-
-			BulksignResult<SendEnvelopeResultApiModel> result = api.SendBulkEnvelope(apiToken, bundle);
-
-			if (result.IsSuccessful)
-			{
-				try
-				{
-					string bundleConfiguration = IntegrationSettings.StoreEnvelopeConfiguration ? JsonConvert.SerializeObject(bundle) : string.Empty;
-
-					new DbIntegration().AddSentEnvelope(apiToken.UserEmail, apiToken.Key, result.Response.EnvelopeId, bundleConfiguration);
-				}
-				catch (Exception ex)
-				{
-					log.Error(ex, $"Failed to store envelope {result.Response.EnvelopeId}");
-				}
-			}
-
-			return result;
-		}
-
-
-
 
 		private AuthenticationApiModel ExtractApiAuthenticationToken()
 		{
