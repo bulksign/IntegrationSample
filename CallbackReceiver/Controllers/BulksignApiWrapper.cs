@@ -18,13 +18,13 @@ namespace BulksignIntegration.CallbackReceiver
 
 		[Route("PrepareSendEnvelope")]
 		[HttpPost]
-		public BulksignResult<EnvelopeApiModel> PrepareSendEnvelope([FromBody] FileInput[] files)
+		public BulksignResult<EnvelopeApiModel> PrepareSendEnvelope([FromBody] PrepareEnvelopeApiModel prepare)
 		{
 			AuthenticationApiModel apiToken = ExtractApiAuthenticationToken();
 
 			BulkSignApi api = new BulkSignApi(IntegrationSettings.BulksignRestUrl);
 
-			BulksignResult<EnvelopeApiModel> result = api.PrepareSendEnvelope(apiToken, files);
+			BulksignResult<EnvelopeApiModel> result = api.PrepareSendEnvelope(apiToken, prepare);
 
 			return result;
 		}
@@ -39,7 +39,7 @@ namespace BulksignIntegration.CallbackReceiver
 			BulkSignApi api = new BulkSignApi(IntegrationSettings.BulksignRestUrl);
 
 			BulksignResult<string> result = api.DeleteEnvelope(apiToken, envelopeId);
-			
+
 			if (result.IsSuccessful)
 			{
 				try
