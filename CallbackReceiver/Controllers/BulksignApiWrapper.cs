@@ -22,7 +22,7 @@ namespace BulksignIntegration.CallbackReceiver
 		{
 			AuthenticationApiModel apiToken = ExtractApiAuthenticationToken();
 
-			BulkSignApi api = new BulkSignApi(IntegrationSettings.BulksignRestUrl);
+			BulksignApiClient api = new BulksignApiClient(IntegrationSettings.BulksignRestUrl);
 
 			BulksignResult<EnvelopeApiModel> result = api.PrepareSendEnvelope(apiToken, prepare);
 
@@ -36,7 +36,7 @@ namespace BulksignIntegration.CallbackReceiver
 		{
 			AuthenticationApiModel apiToken = ExtractApiAuthenticationToken();
 
-			BulkSignApi api = new BulkSignApi(IntegrationSettings.BulksignRestUrl);
+			BulksignApiClient api = new BulksignApiClient(IntegrationSettings.BulksignRestUrl);
 
 			BulksignResult<string> result = api.DeleteEnvelope(apiToken, envelopeId);
 
@@ -62,7 +62,7 @@ namespace BulksignIntegration.CallbackReceiver
 		{
 			AuthenticationApiModel apiToken = ExtractApiAuthenticationToken();
 
-			BulkSignApi api = new BulkSignApi(IntegrationSettings.BulksignRestUrl);
+			BulksignApiClient api = new BulksignApiClient(IntegrationSettings.BulksignRestUrl);
 
 			BulksignResult<SendEnvelopeResultApiModel> result = api.SendEnvelopeFromTemplate(apiToken, model);
 
@@ -88,7 +88,7 @@ namespace BulksignIntegration.CallbackReceiver
 		{
 			AuthenticationApiModel apiToken = ExtractApiAuthenticationToken();
 
-			BulkSignApi api = new BulkSignApi(IntegrationSettings.BulksignRestUrl);
+			BulksignApiClient api = new BulksignApiClient(IntegrationSettings.BulksignRestUrl);
 
 			BulksignResult<SendEnvelopeResultApiModel> result = api.SendEnvelope(apiToken, bundle);
 

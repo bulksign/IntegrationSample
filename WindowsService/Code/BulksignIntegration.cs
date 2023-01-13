@@ -17,7 +17,7 @@ namespace BulksignIntegration.WindowsService
 			{
 				log.Info($"Checking status for envelope '{envelope.Id}' ");
 
-				BulkSignApi api = new BulkSignApi(IntegrationSettings.BulksignRestUrl);
+				BulksignApiClient api = new BulksignApiClient(IntegrationSettings.BulksignRestUrl);
 
 				AuthenticationApiModel token = new AuthenticationApiModel()
 				{
@@ -66,7 +66,7 @@ namespace BulksignIntegration.WindowsService
 		{
 			log.Info($"Preparing to download documents for completed envelope '{envelopeId}' ");
 
-			BulkSignApi api = new BulkSignApi(IntegrationSettings.BulksignRestUrl);
+			BulksignApiClient api = new BulksignApiClient(IntegrationSettings.BulksignRestUrl);
 
 			AuthenticationApiModel token = new AuthenticationApiModel()
 			{
