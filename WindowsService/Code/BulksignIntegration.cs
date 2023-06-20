@@ -46,10 +46,10 @@ namespace BulksignIntegration.WindowsService
 				}
 
 				//was the status changed 
-				if ((int) envelopeStatus.Response != Constants.NUMERIC_ENVELOPE_STATUS_IN_PROGRESS)
+				if ((int) envelopeStatus.Result != Constants.NUMERIC_ENVELOPE_STATUS_IN_PROGRESS)
 				{
-					log.Info($"Updating status for envelope '{envelope.Id}', new status is '{envelopeStatus.Response.ToString()}' ");
-					new DbIntegration().UpdateEnvelopeStatus(envelope.Id, envelopeStatus.Response.ToString());
+					log.Info($"Updating status for envelope '{envelope.Id}', new status is '{envelopeStatus.Result.ToString()}' ");
+					new DbIntegration().UpdateEnvelopeStatus(envelope.Id, envelopeStatus.Result.ToString());
 				}
 				else
 				{
@@ -93,7 +93,7 @@ namespace BulksignIntegration.WindowsService
 				return;
 			}
 
-			if (envelopeStatus.Response != EnvelopeStatusTypeApi.Completed)
+			if (envelopeStatus.Result != EnvelopeStatusTypeApi.Completed)
 			{
 				log.Error($" Invalid envelope status received in {nameof(DownloadCompletedDocuments)} for envelopeId '{envelopeId}', status {envelopeStatus.ToString()} ");
 
@@ -112,7 +112,7 @@ namespace BulksignIntegration.WindowsService
 
 			string fullPath = IntegrationSettings.CompletedEnvelopePath + @"\" + envelopeId + ".zip";
 
-			File.WriteAllBytes(fullPath, result.Response);
+			File.WriteAllBytes(fullPath, result.Result);
 
 			new DbIntegration().UpdateEnvelopeCompletedDocumentPath(envelopeId, fullPath);
 		}

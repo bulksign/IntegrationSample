@@ -48,7 +48,7 @@ namespace BulksignIntegration.CallbackReceiver
 				}
 				catch (Exception ex)
 				{
-					log.Error(ex, $"Failed to store envelope '{result.Response}'");
+					log.Error(ex, $"Failed to store envelope '{result.Result}'");
 				}
 			}
 
@@ -70,11 +70,11 @@ namespace BulksignIntegration.CallbackReceiver
 			{
 				try
 				{
-					new DbIntegration().AddSentEnvelope(apiToken.UserEmail, apiToken.Key, result.Response.EnvelopeId, string.Empty);
+					new DbIntegration().AddSentEnvelope(apiToken.UserEmail, apiToken.Key, result.Result.EnvelopeId, string.Empty);
 				}
 				catch (Exception ex)
 				{
-					log.Error(ex, $"Failed to store data about envelope '{result.Response}' ");
+					log.Error(ex, $"Failed to store data about envelope '{result.Result}' ");
 				}
 			}
 
@@ -98,11 +98,11 @@ namespace BulksignIntegration.CallbackReceiver
 				{
 					string bundleConfiguration = IntegrationSettings.StoreEnvelopeConfiguration ? JsonConvert.SerializeObject(bundle) : string.Empty;
 
-					new DbIntegration().AddSentEnvelope(apiToken.UserEmail, apiToken.Key, result.Response.EnvelopeId, bundleConfiguration);
+					new DbIntegration().AddSentEnvelope(apiToken.UserEmail, apiToken.Key, result.Result.EnvelopeId, bundleConfiguration);
 				}
 				catch (Exception ex)
 				{
-					log.Error(ex, $"Failed to store envelope '{result.Response.EnvelopeId}'");
+					log.Error(ex, $"Failed to store envelope '{result.Result.EnvelopeId}'");
 				}
 			}
 
