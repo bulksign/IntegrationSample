@@ -1,23 +1,22 @@
 ## What is this ? 
 <br/>
-This is a .NET integration sample code for the <a href="https://bulksign.com">Bulksign platform</a> . It allows the integrator to :
+This is a .NET integration sample code for the <a href="https://bulksign.com">Bulksign platform</a>. It allows the integrator to :
 <br/>
 <br/>
-
 
 - receive all the callbacks triggered from Bulksign platform
 
-- handle bundle status updates with periodic configurable polling  (in case your callback handler website goes down)
+- handle envelope status updates with periodic configurable polling  (just in case your callback handler goes down)
 
-- maintain, in a local SQL Server database, a list of all bundles send for signing
+- maintain, in a local SQL Server database, a list of all envelopes send for signing
 
-- optionally store the configuration of each sent bundle (could be used for troubleshooting)
+- optionally store the configuration of each sent envelope (could be used for troubleshooting)
 
 - downloads the completed documents and stores them locally
 
 - works with any version of Bulksign (SAAS and OnPremise)
 
-- it's shipped as source code so any integrator can change it and adapt it to its needs.
+- it's shipped as source code so any integrator can change it and adapt it to their needs.
 
 <br/>
 <br/>
@@ -31,7 +30,7 @@ This is a .NET integration sample code for the <a href="https://bulksign.com">Bu
 
 - run the \dbschema\db-query.sql  query to create the DB schema.
 
-- extend the code to handle callbacks \ bundle completed action.
+- extend the code to handle callbacks \ envelope completed action.
 
 - configure the integration : 
 
@@ -47,12 +46,15 @@ This is a .NET integration sample code for the <a href="https://bulksign.com">Bu
 		
 <add key="BulksignRootApiUrl" value="http://bulksign.com/webapi/" /> 
 		
-<add key="StoreBundleConfiguration" value="True" />
+<add key="StoreBundleConfiguration" value="false" />
 
 ```
 
 
-- deploy the integration code : the CallbackReceiver website should be deployed in IIS , and the WindowService project 
+- deploy the integration code : 
+
+a) the CallbackReceiver website should be deployed in IIS 
+b) WindowService project should be deployed as a Windows service 
 
 ```
 cd c:\Windows\Microsoft.NET\Framework64\v4.0.30319\
@@ -61,7 +63,7 @@ installutil -i c:\build\BulksignIntegration.Service.exe
 
 ```
 
-- your integration code to point to this endpoint when sending bundles for signing
+- your integration code to point to this endpoint when sending envelopes for signing
 
 ```
   BulksignApi api = new BulksignApi ("http://myendpoint/bulksignintegration/restapi")
